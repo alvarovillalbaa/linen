@@ -29,7 +29,11 @@ The focused frontend command is `node --test tests/unit/*.test.mjs` using Node v
 
 ## Source publication
 
-The original personal-project goal authorizes a separate personal GitHub repository. An authenticated read identified `alvarovillalbaa`; `repos/alvarovillalbaa/linen` returned 404 before creation. Publication receipt will identify the actual source commit and remote readback. Local files or a planned repository URL alone do not prove publication. No Vercel project, integration, deployment, Convex account/project or environment setting was created by this source release.
+The original personal-project goal authorizes a separate personal GitHub repository. An authenticated read identified `alvarovillalbaa`; `repos/alvarovillalbaa/linen` returned 404 before creation. The public repository is now [alvarovillalbaa/linen](https://github.com/alvarovillalbaa/linen), repository ID `1435662653`, default branch `main`, GitHub Pages disabled.
+
+Application source commit: [`c787e46594a0f0064d15baa0d56b6585f0e57aef`](https://github.com/alvarovillalbaa/linen/commit/c787e46594a0f0064d15baa0d56b6585f0e57aef). Authenticated GitHub readback matched its exact local commit and tree `5011000399b5f2cdc67df3584d9b48e5f65fa962`; the README content endpoint returned its expected path, size and Git blob. Both staged and unstaged whitespace checks passed, and the working tree was clean after publication. This receipt update is documentation only.
+
+No Vercel project, integration, deployment, Convex account/project or environment setting was created by this source release. GitHub source publication does not prove a running service.
 
 ## Gates retained
 
