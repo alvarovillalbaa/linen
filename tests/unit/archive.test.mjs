@@ -249,7 +249,13 @@ test('site export uses canonical escaped rendering and only packaged referenced 
 
 test('missing IndexedDB rejects honestly rather than using a fake successful fallback', async () => {
   assert.equal(typeof globalThis.indexedDB, 'undefined');
-  const { loadWorkspace, saveWorkspace } = await import('../../lib/local.ts');
+  const { loadWorkspace, saveWorkspace, removeWorkspace, replaceWorkspace } = await import('../../lib/local.ts');
   await assert.rejects(loadWorkspace(), /storage is unavailable/);
-  await assert.rejects(saveWorkspace({ version: 1, page: blankPage(), remote: null, updatedAt: 1 }), /storage is unavailable/);
+  const workspace = { version: 1, page: blankPage(), remote: null, updatedAt: 1 };
+  await assert.rejects(saveWorkspace(workspace), /Read the saved local draft/);
+  await assert.rejects(removeWorkspace(), /Read the saved local draft/);
+  await assert.rejects(replaceWorkspace(workspace, []), /Read the saved local draft/);
+  await assert.rejects(saveWorkspace(workspace, null), /storage is unavailable/);
+  await assert.rejects(removeWorkspace(null), /storage is unavailable/);
+  await assert.rejects(replaceWorkspace(workspace, [], null), /storage is unavailable/);
 });

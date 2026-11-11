@@ -21,9 +21,10 @@ import zipfile
 BASE = "6277e1e56a4066fcb9b4a4b49496cdf980219f3f"
 REPOSITORY = "alvarovillalbaa/linen"
 BRANCH = "refs/heads/qa/linen-local-draft-cas-20261111-1"
-ADDED = set(["scripts/ci-local-draft-cas.py","tests/e2e/local-draft-cas.mjs","docs/proposals/local-draft-cas.md","docs/proposals/local-draft-cas-ci.workflow.yml.example","docs/results/2026/11-11/local-draft-cas-source.md","docs/results/2026/11-11/local-draft-cas-native-fixtures.md","docs/results/2026/11-11/local-draft-cas-native.stdout.log","docs/results/2026/11-11/local-draft-cas-native.stderr.log","docs/results/2026/11-11/local-draft-cas-native-observer-failure.log","docs/results/2026/11-11/local-draft-cas-native-records.json"])
-CHANGED = {"AGENTS.md", "docs/implementation-contract.md", "lib/local.ts", "lib/client.ts", "components/editor.tsx"}
+ADDED = set(["scripts/ci-local-draft-cas.py","tests/e2e/local-draft-cas.mjs","docs/proposals/local-draft-cas.md","docs/proposals/local-draft-cas-ci.workflow.yml.example","docs/results/2026/11-11/local-draft-cas-source.md","docs/results/2026/11-11/local-draft-cas-native-fixtures.md","docs/results/2026/11-11/local-draft-cas-native.stdout.log","docs/results/2026/11-11/local-draft-cas-native.stderr.log","docs/results/2026/11-11/local-draft-cas-native-observer-failure.log","docs/results/2026/11-11/local-draft-cas-native-records.json","scripts/check-expected-snapshot.py","docs/results/2026/11-11/expected-snapshot-native.md","docs/results/2026/11-11/expected-snapshot-native.json","docs/results/2026/11-11/expected-snapshot-native.stdout.tap","docs/results/2026/11-11/expected-snapshot-native.stderr.log"])
+CHANGED = {"AGENTS.md", "docs/implementation-contract.md", "lib/local.ts", "lib/client.ts", "components/editor.tsx", "tests/unit/archive.test.mjs"}
 RUNTIME_CHANGED = {"lib/local.ts", "lib/client.ts", "components/editor.tsx"}
+BASELINE_CHANGED = RUNTIME_CHANGED | {"tests/unit/archive.test.mjs"}
 EXPORT = ["app/[profile]/route.ts","app/api/config/route.ts","app/api/link-preview/route.ts","app/api/media/[handle]/[id]/route.ts","app/api/profiles/[handle]/media/route.ts","app/api/profiles/[handle]/preview/route.ts","app/api/profiles/[handle]/publish/route.ts","app/api/profiles/[handle]/route.ts","app/api/profiles/route.ts","app/globals.css","app/layout.tsx","app/not-found.tsx","app/og/[handle]/route.tsx","app/page.tsx","app/preview/[handle]/route.ts","components/editor.tsx","components/inspector.tsx","lib/archive.ts","lib/client.ts","lib/local.ts","lib/media.ts","lib/model.ts","lib/render.ts","lib/server/backend.ts","lib/server/link-preview.ts","lib/server/protocol.ts","lib/types.ts","next-env.d.ts","next.config.ts","package-lock.json","package.json","public/favicon.svg","tests/e2e/local-draft-cas.mjs","tests/e2e/editor-v2.mjs","tests/e2e/editor.mjs","tests/unit/archive.test.mjs","tests/unit/model.test.mjs","tests/unit/render.test.mjs","tsconfig.json"]
 SOURCE = sys.argv[2] if len(sys.argv) == 3 and sys.argv[1] == "--source-commit" else None
 REPO = Path.cwd().resolve()
@@ -309,17 +310,17 @@ def preflight():
     guard('before_setup')
     for name in EXPORT:
         target=root/'source'/name;target.parent.mkdir(mode=0o700,parents=True,exist_ok=True);write(target,read(REPO/name))
-    for name in sorted(RUNTIME_CHANGED):
+    for name in sorted(BASELINE_CHANGED):
         target=root/'baseline'/name;target.parent.mkdir(mode=0o700,parents=True,exist_ok=True)
         write(target,command('baseline_'+name.replace('/','_').replace('.','_'),['git','show',BASE+':'+name]))
-    report['baselineRuntimeInputs']=[{'path':name,'sha256':sha(read(root/'baseline'/name))} for name in sorted(RUNTIME_CHANGED)]
+    report['baselineRuntimeInputs']=[{'path':name,'sha256':sha(read(root/'baseline'/name))} for name in sorted(BASELINE_CHANGED)]
     export_vector=inventory(root/'source');report['sourceExport']={'files':EXPORT,'count':len(EXPORT),'vectorSha256':sha(json.dumps(export_vector,sort_keys=True).encode())}
     need(command('node_version',[str(node),'--version'])==b'v24.22.2\n','node_version_changed');report['node']=str(node)
     return node
 
 
 def application_input(name):
-    return read(root/('baseline' if application_phase=='baseline' and name in RUNTIME_CHANGED else 'source')/name)
+    return read(root/('baseline' if application_phase=='baseline' and name in BASELINE_CHANGED else 'source')/name)
 
 
 def verify_app_inputs(allow_generated=False):
@@ -442,7 +443,7 @@ def transition_to_candidate(node):
     s=build.lstat();need(s.st_uid==os.getuid(),'baseline_build_owner_changed')
     shutil.rmtree(build);need(not os.path.lexists(build),'baseline_build_remaining')
     report['baselineBuildRetirement']={'removed':True,'entries':len(rows),'regularBytes':sum(r['bytes'] for r in rows if 'sha256' in r),'noOpenersObserved':True}
-    for name in sorted(RUNTIME_CHANGED|{'next-env.d.ts','tsconfig.json'}):
+    for name in sorted(BASELINE_CHANGED|{'next-env.d.ts','tsconfig.json'}):
         target=root/'app'/name;before=identity(target)
         need(stat.S_ISREG(target.lstat().st_mode) and before['uid']==os.getuid(),'transition_target_refused')
         with open(target,'r+b') as stream:stream.write(read(root/'source'/name));stream.truncate();stream.flush();os.fsync(stream.fileno())

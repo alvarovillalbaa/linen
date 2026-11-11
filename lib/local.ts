@@ -72,15 +72,15 @@ export class LocalDraftConflictError extends Error {
   }
 }
 
-function expectedSnapshot(expected: Workspace | null | undefined): Workspace | null | undefined {
-  return expected === null || expected === undefined ? expected : validateWorkspace(expected);
+function expectedSnapshot(expected: Workspace | null | undefined): Workspace | null {
+  if (expected === undefined) throw new Error('Read the saved local draft before saving or replacing it.');
+  return expected === null ? expected : validateWorkspace(expected);
 }
 
-function whenWorkspaceMatches(tx: IDBTransaction, expected: Workspace | null | undefined, commit: () => void, fail: (error: unknown) => void) {
+function whenWorkspaceMatches(tx: IDBTransaction, expected: Workspace | null, commit: () => void, fail: (error: unknown) => void) {
   const request = tx.objectStore('workspace').get('current');
   request.onsuccess = () => {
     try {
-      if (expected === undefined) throw new Error('Read the saved local draft before saving or replacing it.');
       const actual = request.result === undefined ? null : validateWorkspace(request.result);
       if (JSON.stringify(actual) !== JSON.stringify(expected)) throw new LocalDraftConflictError();
       commit();

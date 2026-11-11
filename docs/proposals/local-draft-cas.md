@@ -19,7 +19,10 @@ committed by that editor. A read and full normalized-snapshot comparison occur
 inside the same IndexedDB readwrite transaction as the put/clear. A mismatch
 aborts before writes or media clearing. The stored format and database version
 stay unchanged. An unread baseline fails closed; a successfully observed empty
-store is represented by `null`.
+store is represented by `null`. Missing expectations reject before opening
+IndexedDB for save, removal and full replacement. The existing Node storage
+fixture now uses the required expected argument for unavailable-storage checks
+and checks missing expectations separately; no new case identity is added.
 
 The editor advances its baseline only after a successful commit. Publishing
 bookkeeping uses that same guarded callback. A conflict keeps the current
@@ -54,7 +57,8 @@ Prepare one public Ubuntu 24.04/Node 24.22.2 job, capped at 20 minutes, with
 Playwright 1.65.0 tool lock is reused. Install once, build the baseline, run only
 its two reproduction cases, retire the owned baseline build, restore generated
 Next declarations/config and install the three exact candidate application files
-before a fresh candidate build. Keep separate phase directories, BUILD_IDs,
+before a fresh candidate build. Restore the original archive fixture in the
+baseline phase and the updated fixture in the candidate phase. Keep separate phase directories, BUILD_IDs,
 application vectors, complete command/server streams and browser response originals.
 Require both exact baseline overwrite witnesses and all six candidate passes.
 No service binding or network request beyond the bounded package/browser setup

@@ -45,3 +45,11 @@ Native Node24.21.0 produced44matching passing fixture records, but its outer
 receipt observer failed and did not persist the child exit code. See
 `docs/results/2026/11-11/local-draft-cas-native-fixtures.md`; do not relabel it
 as a successful controller, Linux CI, IndexedDB or browser qualification.
+
+The later expected-snapshot guard rejects missing expectations before opening
+storage. One extended existing fixture passed on native Node24.21.0 with actual
+child exit0 and verified cleanup; see
+`docs/results/2026/11-11/expected-snapshot-native.md`. It is separate from the
+old44-record observation. Real IndexedDB/two-tab and semantic-build acceptance
+remain pending. The CI baseline also restores the original fixture before its
+candidate phase; no live verification job is activated by this source work.

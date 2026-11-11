@@ -1,0 +1,116 @@
+{
+  "schemaVersion": "linen.expected-snapshot-native.v1",
+  "sourceParentCommit": "9a4042fb33af07463e245690f17b2604fd10e968",
+  "nativeBaseCommit": "6277e1e56a4066fcb9b4a4b49496cdf980219f3f",
+  "case": "missing IndexedDB rejects honestly rather than using a fake successful fallback",
+  "passed": true,
+  "errors": [],
+  "cleanup": {
+    "ownedExportRemoved": true,
+    "absenceReadback": true,
+    "noOpenersObserved": true,
+    "sourceFiles": 9,
+    "sourceBytes": 101495
+  },
+  "scope": {
+    "expectedSnapshotInputGuard": true,
+    "unavailableIndexedDB": true,
+    "actualIndexedDB": false,
+    "browser": false,
+    "semanticBuild": false,
+    "backend": false
+  },
+  "proofLimits": [
+    "One modified authored fixture, not a new 44-case run or two-tab/browser acceptance.",
+    "Native macOS Node24.21.0 differs from planned Linux Node24.22.2."
+  ],
+  "sourceExport": [
+    {
+      "path": "lib/model.ts",
+      "bytes": 18089,
+      "sha256": "298f9ffd8e02e046374c83cb29efbd6159c57847c88ae47ce4344995a7647487",
+      "gitBlob": "a52b3f74ce5807a1075b66848215097aa42a922a"
+    },
+    {
+      "path": "lib/media.ts",
+      "bytes": 6523,
+      "sha256": "f9db64322c1dbcf8675e3584aeb15462ecaa751d8d92da5ca1bee680ed1ffd76",
+      "gitBlob": "b6d34d7974d414945713cb0f1ee264bb4ff12a46"
+    },
+    {
+      "path": "lib/archive.ts",
+      "bytes": 13231,
+      "sha256": "0e68c8501627653ed4cffba5480898848d698f4968f3fcde9e67d26f2bc4cb2f",
+      "gitBlob": "9e678f82e8acd3a27f4ed2dad9111c6570b9a4d4"
+    },
+    {
+      "path": "lib/render.ts",
+      "bytes": 13989,
+      "sha256": "f5b9375f4b81947b037ead2787b9a228813471c8cc118bcaf857430d1aa6ebd9",
+      "gitBlob": "49b6ece7ca1d0a9bc3f10d1fb8e2f0c94002117a"
+    },
+    {
+      "path": "lib/types.ts",
+      "bytes": 1403,
+      "sha256": "53cdff8c4c641d331731e54d54718d589cc352e447f0ad6da82bcf7b9c6c99a9",
+      "gitBlob": "60fc29e5372c99fe56b7b3e4a2286c9514db2d3a"
+    },
+    {
+      "path": "lib/local.ts",
+      "bytes": 9186,
+      "sha256": "a89d02180bdc083145b40b53e37386b5fc22fc0115bb72d51ffbd01d35c55cab",
+      "gitBlob": "78a450497bdf4f2f79dc76ac4cb9f65610a0bcc7"
+    },
+    {
+      "path": "tests/unit/archive.test.mjs",
+      "bytes": 16659,
+      "sha256": "57f62ab295a5fe146ef2bb732ff4fc4d9b65c18d1acb6e5bb44ff02e6fd54591",
+      "gitBlob": "e5c2ae3e2556cedf480f291adcc4ac44b4015f00"
+    },
+    {
+      "path": "tests/unit/model.test.mjs",
+      "bytes": 17075,
+      "sha256": "8c63dcb5f21d528f6adc4410c6de18f5b03aa5eebec249dd6e9e4ef9610f7617",
+      "gitBlob": "d8587b4b3604431dae8419477e0f7e0809c530f8"
+    },
+    {
+      "path": "tests/unit/render.test.mjs",
+      "bytes": 5340,
+      "sha256": "32aaf260e3f8af90fb465d13d3faaaa8b8c23e00a19c5beeb159315b23c5fa12",
+      "gitBlob": "5163a6604dcfccd1caa6a933d42d13c7e084c06f"
+    }
+  ],
+  "sourceVectorSha256": "c42e03bfa875d6322ff3fd51fc41c5b14fb890add6589d9cf524e17052e02193",
+  "runtime": {
+    "node": "v24.21.0",
+    "platform": "darwin",
+    "nodeSha256": "e4b5a3af0e05c75de2eae013904145f40fe7fc2a6e6f17510128bf45cca4e79b",
+    "identityExcludesAccessTime": true
+  },
+  "child": {
+    "pid": 14774,
+    "exitCode": 0,
+    "timedOut": false,
+    "reaped": true,
+    "durationSeconds": 0.137952,
+    "stdout": {
+      "bytes": 347,
+      "sha256": "850164f9e2b1a63915e9f49f5173c07b633592c26726a973d780c3cff63f424a"
+    },
+    "stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "groupAbsent": true
+  },
+  "filterSkippedNames": [],
+  "summary": {
+    "tests": 1,
+    "pass": 1,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  "sourcePreserved": true
+}
