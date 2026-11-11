@@ -1,0 +1,43 @@
+name: Linen remaining editor journeys
+on:
+  push:
+    branches: [qa/linen-local-editor-20261111-editor-2]
+permissions:
+  contents: read
+concurrency:
+  group: linen-editor-browser-2
+  cancel-in-progress: false
+jobs:
+  editor-browser:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      SOURCE_COMMIT: d4b94e9f2d7b8dc8c17d5b69adf91536a0fd00b4
+    steps:
+      - name: Record earliest job clock
+        run: echo "LN_EDITOR2_JOB_STARTED_MS=$(date +%s%3N)" >> "$GITHUB_ENV"
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ env.SOURCE_COMMIT }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: 24.22.2
+          check-latest: false
+      - name: Run three remaining editor journeys
+        run: python3 -I -S -B scripts/ci-editor-v2.py --source-commit "$SOURCE_COMMIT"
+      - name: Upload original evidence
+        id: proof
+        if: ${{ always() && env.LN_EDITOR2_PROOF_PATH != '' }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        with:
+          name: linen-editor-browser-v2-${{ github.run_id }}
+          path: ${{ env.LN_EDITOR2_PROOF_PATH }}
+          include-hidden-files: false
+          if-no-files-found: error
+          retention-days: 14
+          compression-level: 6
+      - name: Retire uploaded proof
+        if: ${{ always() && steps.proof.outcome == 'success' }}
+        run: python3 -I -S -B scripts/ci-editor-v2.py --cleanup-proof
