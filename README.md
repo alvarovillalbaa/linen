@@ -26,7 +26,7 @@ The publishing source provides stable `/@handle` pages, separate draft/published
 
 ## Development
 
-Use Node 24. Read [`AGENTS.md`](AGENTS.md) and run the workspace's storage preflight before installing dependencies or building. Local installation remains stopped because the preflight failed. The [first dependency lock](docs/results/2026/11-11/first-lock.md) was generated and reviewed in isolated public CI without installing application packages. Frozen installation and an accepted build remain release gates.
+Use Node 24. Read [`AGENTS.md`](AGENTS.md) and run the workspace's storage preflight before installing dependencies or building. Local installation remains stopped because the preflight failed. The [first dependency lock](docs/results/2026/11-11/first-lock.md) and [frozen install/production build](docs/results/2026/11-11/local-build.md) are accepted in isolated public CI. The 44 frontend fixtures passed in the first build attempt; a corrected observer carried their original records into the successful build without replay. Browser and hosted/backend acceptance remain open.
 
 After sufficient storage and the required approvals:
 

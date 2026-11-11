@@ -1,0 +1,16 @@
+[
+  {
+    "path": "next-env.d.ts",
+    "beforeSha256": "879741880b6ab48da99dcc06dcc674d381c9826137b0496bf7bb368f302de9fc",
+    "afterSha256": "1862ac4bbbc5192d4bf562161df66ea547ed3e67173100656ab606ae9797db2b",
+    "before": "/// <reference types=\"next\" />\n/// <reference types=\"next/image-types/global\" />\n",
+    "after": "/// <reference types=\"next\" />\n/// <reference types=\"next/image-types/global\" />\nimport \"./.next/types/routes.d.ts\";\nimport \"./.next/types/root-params.d.ts\";\n\n// NOTE: This file should not be edited\n// see https://nextjs.org/docs/app/api-reference/config/typescript for more information.\n"
+  },
+  {
+    "path": "tsconfig.json",
+    "beforeSha256": "b5870c4fec3d5c219a9ba73fcfa5adb9403e067743b3d685a9b430034bb302b9",
+    "afterSha256": "a482660b1811c76ecf19bae04a098b6fe06cd5fe44ac9dfa967c4d38abd26220",
+    "before": "{\n  \"compilerOptions\": {\n    \"target\": \"ES2022\",\n    \"lib\": [\"dom\", \"dom.iterable\", \"esnext\"],\n    \"allowJs\": true,\n    \"skipLibCheck\": true,\n    \"strict\": true,\n    \"noEmit\": true,\n    \"esModuleInterop\": true,\n    \"module\": \"esnext\",\n    \"moduleResolution\": \"bundler\",\n    \"paths\": { \"@/*\": [\"./*\"] },\n    \"resolveJsonModule\": true,\n    \"isolatedModules\": true,\n    \"jsx\": \"react-jsx\",\n    \"incremental\": true,\n    \"allowImportingTsExtensions\": true,\n    \"plugins\": [{ \"name\": \"next\" }]\n  },\n  \"include\": [\"next-env.d.ts\", \"**/*.ts\", \"**/*.tsx\", \".next/types/**/*.ts\"],\n  \"exclude\": [\"node_modules\", \"convex\"]\n}\n",
+    "after": "{\n  \"compilerOptions\": {\n    \"target\": \"ES2022\",\n    \"lib\": [\n      \"dom\",\n      \"dom.iterable\",\n      \"esnext\"\n    ],\n    \"allowJs\": true,\n    \"skipLibCheck\": true,\n    \"strict\": true,\n    \"noEmit\": true,\n    \"esModuleInterop\": true,\n    \"module\": \"esnext\",\n    \"moduleResolution\": \"bundler\",\n    \"paths\": {\n      \"@/*\": [\n        \"./*\"\n      ]\n    },\n    \"resolveJsonModule\": true,\n    \"isolatedModules\": true,\n    \"jsx\": \"react-jsx\",\n    \"incremental\": true,\n    \"allowImportingTsExtensions\": true,\n    \"plugins\": [\n      {\n        \"name\": \"next\"\n      }\n    ]\n  },\n  \"include\": [\n    \"next-env.d.ts\",\n    \"**/*.ts\",\n    \"**/*.tsx\",\n    \".next/types/**/*.ts\",\n    \".next/dev/types/**/*.ts\"\n  ],\n  \"exclude\": [\n    \"node_modules\",\n    \"convex\"\n  ]\n}\n"
+  }
+]

@@ -18,3 +18,8 @@ their historical source boundary. The capacity check remains pending: no
 deployment, account, provider setup, public publishing or backend acceptance.
 Start with the isolated lock-generation phase; review its actual output before
 freezing a separate install/build/editor source. No local heavy execution.
+
+The lock phase and frozen local build are now closed; see
+`docs/results/2026/11-11/local-build.md`. Preserve the failed summary observer
+and its 44 actual passing frontend records; do not replay them unchanged.
+Next is concrete local-editor browser acceptance, with publishing still disabled.
