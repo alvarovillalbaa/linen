@@ -17,8 +17,11 @@ Local verification uses an existing read-only TypeScript 5.9.3 parser for the
 three changed TS/TSX modules and their relative imports; Node syntax checking
 for the authored browser program; Python AST parsing for the concrete CI
 controller; source/Markdown-reference checks and an exact-base patch check.
-These are static checks. Semantic types, 44 frontend fixtures, baseline
-overwrite reproduction and all six candidate browser scenarios remain pending.
+These are static checks. A later [native fixture observation](local-draft-cas-native-fixtures.md)
+retains44actual matching pass records and its failed outer receipt observer;
+the actual child exit code was not persisted. Semantic types, Linux CI fixture
+qualification, baseline overwrite reproduction and all six candidate browser
+scenarios remain pending.
 The inactive [workflow example](../../../proposals/local-draft-cas-ci.workflow.yml.example)
 does not start a job. No `.github/workflows/` file is added by this source.
 

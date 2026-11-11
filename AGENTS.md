@@ -40,3 +40,8 @@ recovery run43095738552 and its frozen source intact. Do not enqueue a duplicate
 or another verification job while that run remains live. Source work is covered
 by the all-project implementation authorization; no cloud/provider or migration
 gate is opened. Native main remains the previously published qualified source.
+
+Native Node24.21.0 produced44matching passing fixture records, but its outer
+receipt observer failed and did not persist the child exit code. See
+`docs/results/2026/11-11/local-draft-cas-native-fixtures.md`; do not relabel it
+as a successful controller, Linux CI, IndexedDB or browser qualification.

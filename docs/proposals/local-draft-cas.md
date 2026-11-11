@@ -66,8 +66,12 @@ branch can be reviewed now; it does not change main, its frozen source, or
 runtime acceptance. The concrete controller and inactive workflow must be
 reviewed and frozen before activation. No workflow belongs in main.
 
-Local checks so far cover syntax/import resolution and patch applicability only.
-Semantic types, frontend fixture execution, baseline reproduction and candidate
-browser behavior are pending. Storage Guard prevents local heavy execution.
+Local source checks cover syntax/import resolution and patch applicability.
+The separate [native fixture record](../results/2026/11-11/local-draft-cas-native-fixtures.md)
+retains44actual passes on Node24.21.0 plus a failed outer receipt observer and
+unpersisted child exit code. It does not replace this Linux/Node24.22.2 CI
+profile, whose reporter is now explicitly TAP. Semantic types, CI fixture
+qualification, baseline reproduction and candidate browser behavior remain
+pending. Storage Guard prevents local heavy execution.
 These checks cannot establish hosted publishing, backend ownership, physical
 touch, Safari, assistive technology, quota behavior or full-product completion.

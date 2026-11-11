@@ -1,0 +1,213 @@
+{
+  "schemaVersion": "linen.local-draft-cas-native-record-reconciliation.v2",
+  "sourceCommit": "6cddf6ceb90e8171b26fcb9efdaa9f19bc0fc211",
+  "nativeBaseCommit": "6277e1e56a4066fcb9b4a4b49496cdf980219f3f",
+  "runtime": {
+    "node": "v24.21.0",
+    "platform": "darwin",
+    "ciNode": "v24.22.2",
+    "sameRuntimeAsCI": false,
+    "nodeBinarySha256": "e4b5a3af0e05c75de2eae013904145f40fe7fc2a6e6f17510128bf45cca4e79b"
+  },
+  "sourceExport": [
+    {
+      "path": "lib/model.ts",
+      "bytes": 18089,
+      "sha256": "298f9ffd8e02e046374c83cb29efbd6159c57847c88ae47ce4344995a7647487",
+      "gitBlob": "a52b3f74ce5807a1075b66848215097aa42a922a"
+    },
+    {
+      "path": "lib/media.ts",
+      "bytes": 6523,
+      "sha256": "f9db64322c1dbcf8675e3584aeb15462ecaa751d8d92da5ca1bee680ed1ffd76",
+      "gitBlob": "b6d34d7974d414945713cb0f1ee264bb4ff12a46"
+    },
+    {
+      "path": "lib/archive.ts",
+      "bytes": 13231,
+      "sha256": "0e68c8501627653ed4cffba5480898848d698f4968f3fcde9e67d26f2bc4cb2f",
+      "gitBlob": "9e678f82e8acd3a27f4ed2dad9111c6570b9a4d4"
+    },
+    {
+      "path": "lib/render.ts",
+      "bytes": 13989,
+      "sha256": "f5b9375f4b81947b037ead2787b9a228813471c8cc118bcaf857430d1aa6ebd9",
+      "gitBlob": "49b6ece7ca1d0a9bc3f10d1fb8e2f0c94002117a"
+    },
+    {
+      "path": "lib/types.ts",
+      "bytes": 1403,
+      "sha256": "53cdff8c4c641d331731e54d54718d589cc352e447f0ad6da82bcf7b9c6c99a9",
+      "gitBlob": "60fc29e5372c99fe56b7b3e4a2286c9514db2d3a"
+    },
+    {
+      "path": "lib/local.ts",
+      "bytes": 9240,
+      "sha256": "7862330d24106a5672fe0b7b18492a1d7dc3ef4798407ceccd5aa61a24a88141",
+      "gitBlob": "a18530dd0a2c78cd0fc02a0ed3db8ef5c456c013"
+    },
+    {
+      "path": "tests/unit/archive.test.mjs",
+      "bytes": 16185,
+      "sha256": "26ffc76fee8843176d3316a4a70235c7df41efafcf38c2d5370f4c36a6f3962c",
+      "gitBlob": "70bab0dbe8d9c87ee88ac58e5c053b0b44d306e6"
+    },
+    {
+      "path": "tests/unit/model.test.mjs",
+      "bytes": 17075,
+      "sha256": "8c63dcb5f21d528f6adc4410c6de18f5b03aa5eebec249dd6e9e4ef9610f7617",
+      "gitBlob": "d8587b4b3604431dae8419477e0f7e0809c530f8"
+    },
+    {
+      "path": "tests/unit/render.test.mjs",
+      "bytes": 5340,
+      "sha256": "32aaf260e3f8af90fb465d13d3faaaa8b8c23e00a19c5beeb159315b23c5fa12",
+      "gitBlob": "5163a6604dcfccd1caa6a933d42d13c7e084c06f"
+    }
+  ],
+  "sourceExportBytes": 101075,
+  "actualReporter": "spec",
+  "originalLocalFilename": "stdout.tap",
+  "retainedFilenameSuffixDoesNotIndicateTAP": true,
+  "sourceTestNames": [
+    "supported signatures identify six formats without trusting a MIME declaration",
+    "empty, truncated, false RIFF and non-WebM/MP4 containers are rejected",
+    "declared and actual file limits apply even when the MIME is omitted",
+    "exact per-file image and video size boundaries remain accepted",
+    "metadata requires UUID identity, exact Blob size and a safe basename",
+    "backup round trip preserves page UUIDs, layouts, media UUIDs and bytes",
+    "only referenced media is exported and no private workspace binding is serialized",
+    "a draft without media remains portable without becoming a published profile",
+    "missing and duplicate referenced media are rejected before export",
+    "combined referenced media cannot exceed the 64 MiB page quota",
+    "import preserves the exact original UUID spelling rather than generating replacements",
+    "case-folding media paths cannot overwrite each other on a portable filesystem",
+    "corrupted file contents fail CRC before a project can be returned",
+    "correct CRC cannot disguise a mismatched file signature or size",
+    "unsafe, duplicate and unlisted ZIP paths cannot enter a backup",
+    "encrypted, compressed and excessive-entry ZIP archives fail explicitly",
+    "local/directory disagreement, overlapping offsets and truncated ZIPs are rejected",
+    "unknown manifest versions, invalid pages, missing references and owner metadata are rejected",
+    "site export uses canonical escaped rendering and only packaged referenced media",
+    "missing IndexedDB rejects honestly rather than using a fake successful fallback",
+    "new pages/cards are independent editable drafts with UUID identities and fixed limits",
+    "draft validation preserves unfinished editable strings and clones every transport object",
+    "unknown credentials and prototype/accessor tricks cannot enter persisted page data",
+    "malformed arrays, scalar IDs and duplicate identities fail before a draft can save",
+    "draft bounds use actual UTF-8 page bytes and reject unsupported versions/types/coordinates",
+    "well-formed international text survives while unpaired surrogates get a readable error",
+    "publication reports meaningful field issues without mutating or discarding drafts",
+    "every supported card class can publish and unknown HTTPS embeds keep their outbound fallback",
+    "assets are deduplicated in source order and supplied availability is enforced only when provided",
+    "cover URLs preserve incomplete drafts, accept HTTPS publication and reject executable or local covers",
+    "navigation helpers allow intentional web/email/telephone destinations and reject executable/deceptive URLs",
+    "media helper supports generated assets without allowing remote HTTP, executable schemes or traversal",
+    "provider embeds use fixed HTTPS player origins and ignore unrelated query injection",
+    "handle normalization stays explicit and publication rejects invalid claimed identities",
+    "two/four-column layouts stay deterministic, bounded, nonoverlapping and in readable source order",
+    "move and resize operations preserve content immutably and handle stale/no-op controls safely",
+    "profile text and card attributes cannot become executable HTML",
+    "unsafe link, cover and media schemes are omitted from rendered attributes",
+    "packaged uploaded media takes precedence over an external cover",
+    "unsupported embeds retain a usable outbound link without an arbitrary iframe",
+    "supported embeds use the fixed player origin and retain an outward link",
+    "sharing metadata is profile-specific and private preview excludes indexing",
+    "public and portable output preserves card order and both responsive placements",
+    "video and missing local assets have explicit accessible output"
+  ],
+  "actualPassingRecords": [
+    "supported signatures identify six formats without trusting a MIME declaration",
+    "empty, truncated, false RIFF and non-WebM/MP4 containers are rejected",
+    "declared and actual file limits apply even when the MIME is omitted",
+    "exact per-file image and video size boundaries remain accepted",
+    "metadata requires UUID identity, exact Blob size and a safe basename",
+    "backup round trip preserves page UUIDs, layouts, media UUIDs and bytes",
+    "only referenced media is exported and no private workspace binding is serialized",
+    "a draft without media remains portable without becoming a published profile",
+    "missing and duplicate referenced media are rejected before export",
+    "combined referenced media cannot exceed the 64 MiB page quota",
+    "import preserves the exact original UUID spelling rather than generating replacements",
+    "case-folding media paths cannot overwrite each other on a portable filesystem",
+    "corrupted file contents fail CRC before a project can be returned",
+    "correct CRC cannot disguise a mismatched file signature or size",
+    "unsafe, duplicate and unlisted ZIP paths cannot enter a backup",
+    "encrypted, compressed and excessive-entry ZIP archives fail explicitly",
+    "local/directory disagreement, overlapping offsets and truncated ZIPs are rejected",
+    "unknown manifest versions, invalid pages, missing references and owner metadata are rejected",
+    "site export uses canonical escaped rendering and only packaged referenced media",
+    "missing IndexedDB rejects honestly rather than using a fake successful fallback",
+    "new pages/cards are independent editable drafts with UUID identities and fixed limits",
+    "draft validation preserves unfinished editable strings and clones every transport object",
+    "unknown credentials and prototype/accessor tricks cannot enter persisted page data",
+    "malformed arrays, scalar IDs and duplicate identities fail before a draft can save",
+    "draft bounds use actual UTF-8 page bytes and reject unsupported versions/types/coordinates",
+    "well-formed international text survives while unpaired surrogates get a readable error",
+    "publication reports meaningful field issues without mutating or discarding drafts",
+    "every supported card class can publish and unknown HTTPS embeds keep their outbound fallback",
+    "assets are deduplicated in source order and supplied availability is enforced only when provided",
+    "cover URLs preserve incomplete drafts, accept HTTPS publication and reject executable or local covers",
+    "navigation helpers allow intentional web/email/telephone destinations and reject executable/deceptive URLs",
+    "media helper supports generated assets without allowing remote HTTP, executable schemes or traversal",
+    "provider embeds use fixed HTTPS player origins and ignore unrelated query injection",
+    "handle normalization stays explicit and publication rejects invalid claimed identities",
+    "two/four-column layouts stay deterministic, bounded, nonoverlapping and in readable source order",
+    "move and resize operations preserve content immutably and handle stale/no-op controls safely",
+    "profile text and card attributes cannot become executable HTML",
+    "unsafe link, cover and media schemes are omitted from rendered attributes",
+    "packaged uploaded media takes precedence over an external cover",
+    "unsupported embeds retain a usable outbound link without an arbitrary iframe",
+    "supported embeds use the fixed player origin and retain an outward link",
+    "sharing metadata is profile-specific and private preview excludes indexing",
+    "public and portable output preserves card order and both responsive placements",
+    "video and missing local assets have explicit accessible output"
+  ],
+  "summary": {
+    "tests": 44,
+    "pass": 44,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  "stdout": {
+    "bytes": 4346,
+    "sha256": "5acee74140e5336d8b3c73755d4d6fa1b3a46c40da7fc79d311187222a1f91ea"
+  },
+  "stderr": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "originalControllerPassed": false,
+  "actualChildExitCode": null,
+  "childExitCodeWasNotPersisted": true,
+  "originalObserverFailure": {
+    "line": 31,
+    "assertion": "node.stat() == node_before and executable bytes unchanged",
+    "reason": "Full stat comparison failed after Node execution. It includes mutable access time; original before-stat fields were not persisted, so the differing metadata field is unconfirmed. Current executable SHA256 and all nine source hashes independently match their recorded values."
+  },
+  "dataOnlyReconciliation": true,
+  "testsReplayed": false,
+  "browserOrIndexedDBAccepted": false,
+  "semanticBuildAccepted": false,
+  "cleanup": {
+    "verifiedAtUtc": "2026-11-11T21:23:28Z",
+    "ownedRootRemoved": true,
+    "absenceReadback": true,
+    "noOpenersObserved": true,
+    "openersExitCode": 1,
+    "files": 10,
+    "sourceFiles": 9,
+    "sourceBytes": 101075,
+    "sourceVectorSha256": "bc1e548df876824d64714a4a5fad1876823b9a8671fc4168c22135562f636f42",
+    "nodeDigestStillMatches": true,
+    "nativeMainCleanAndUnchanged": true,
+    "originalProofRetained": true
+  },
+  "proofLimits": [
+    "Existing Node-only authored frontend regressions; no IndexedDB implementation, actual two-tab/browser, semantic build, React editor, cloud/client or hosted acceptance.",
+    "Native macOS Node24.21.0 differs from planned Linux Node24.22.2; no CI equivalence or future CI pass is claimed."
+  ],
+  "dataCorrection": "The exact differing stat field was not persisted; access-time change is a possible explanation, not an established cause. Current executable SHA256 independently matches the pre-execution digest.",
+  "sourcePreservationIndependentlyRechecked": true,
+  "derivedFromLocallyRetainedCorrection": true
+}

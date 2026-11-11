@@ -21,7 +21,7 @@ import zipfile
 BASE = "6277e1e56a4066fcb9b4a4b49496cdf980219f3f"
 REPOSITORY = "alvarovillalbaa/linen"
 BRANCH = "refs/heads/qa/linen-local-draft-cas-20261111-1"
-ADDED = set(["scripts/ci-local-draft-cas.py","tests/e2e/local-draft-cas.mjs","docs/proposals/local-draft-cas.md","docs/proposals/local-draft-cas-ci.workflow.yml.example","docs/results/2026/11-11/local-draft-cas-source.md"])
+ADDED = set(["scripts/ci-local-draft-cas.py","tests/e2e/local-draft-cas.mjs","docs/proposals/local-draft-cas.md","docs/proposals/local-draft-cas-ci.workflow.yml.example","docs/results/2026/11-11/local-draft-cas-source.md","docs/results/2026/11-11/local-draft-cas-native-fixtures.md","docs/results/2026/11-11/local-draft-cas-native.stdout.log","docs/results/2026/11-11/local-draft-cas-native.stderr.log","docs/results/2026/11-11/local-draft-cas-native-observer-failure.log","docs/results/2026/11-11/local-draft-cas-native-records.json"])
 CHANGED = {"AGENTS.md", "docs/implementation-contract.md", "lib/local.ts", "lib/client.ts", "components/editor.tsx"}
 RUNTIME_CHANGED = {"lib/local.ts", "lib/client.ts", "components/editor.tsx"}
 EXPORT = ["app/[profile]/route.ts","app/api/config/route.ts","app/api/link-preview/route.ts","app/api/media/[handle]/[id]/route.ts","app/api/profiles/[handle]/media/route.ts","app/api/profiles/[handle]/preview/route.ts","app/api/profiles/[handle]/publish/route.ts","app/api/profiles/[handle]/route.ts","app/api/profiles/route.ts","app/globals.css","app/layout.tsx","app/not-found.tsx","app/og/[handle]/route.tsx","app/page.tsx","app/preview/[handle]/route.ts","components/editor.tsx","components/inspector.tsx","lib/archive.ts","lib/client.ts","lib/local.ts","lib/media.ts","lib/model.ts","lib/render.ts","lib/server/backend.ts","lib/server/link-preview.ts","lib/server/protocol.ts","lib/types.ts","next-env.d.ts","next.config.ts","package-lock.json","package.json","public/favicon.svg","tests/e2e/local-draft-cas.mjs","tests/e2e/editor-v2.mjs","tests/e2e/editor.mjs","tests/unit/archive.test.mjs","tests/unit/model.test.mjs","tests/unit/render.test.mjs","tsconfig.json"]
@@ -448,7 +448,7 @@ def transition_to_candidate(node):
         with open(target,'r+b') as stream:stream.write(read(root/'source'/name));stream.truncate();stream.flush();os.fsync(stream.fileno())
     application_phase='candidate';verify_app_inputs()
     command('candidate_exact_static_checks',[str(node),'scripts/check.mjs','--typescript',str(root/'app/node_modules/typescript')])
-    fixtures=command('candidate_frontend_fixtures',[str(node),'--test',*[str(root/'app'/name) for name in
+    fixtures=command('candidate_frontend_fixtures',[str(node),'--test','--test-reporter=tap',*[str(root/'app'/name) for name in
             ('tests/unit/archive.test.mjs','tests/unit/model.test.mjs','tests/unit/render.test.mjs')]],90)
     for key,value in [('tests',44),('pass',44),('fail',0),('cancelled',0),('skipped',0),('todo',0)]:
         need(re.search(r'^# '+key+' '+str(value)+r'$',fixtures.decode(),re.M) is not None,'frontend_fixture_summary_changed')
