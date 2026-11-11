@@ -2,7 +2,7 @@
 
 A little space for everything you do. An open-source profile builder for links, projects, notes, photos, video, music and places.
 
-**Source release; hosting is pending.** Linen has not been deployed or checked in a browser. The owner left the free-capacity check pending. No provider account, service, environment setting or paid plan has been created. Persistent public publishing remains required before this project can be called complete.
+**Source release; hosting is pending.** One [desktop editor journey](docs/results/2026/11-11/editor-attempt1.md) passed against the real local production build. Three unfinished journeys have a [queued recovery run](https://github.com/alvarovillalbaa/linen/actions/runs/43095738552); the first overall-failed attempt and its originals remain preserved. This is partial browser qualification. The owner left the free-capacity check pending. No provider account, service, environment setting or paid plan has been created. Persistent public publishing remains required before this project can be called complete.
 
 The editor starts with your own blank page. Edit text in place, add cards, resize them in the inspector, drag their grips or use the keyboard reorder controls, and preview desktop/mobile layouts. Choose four page themes, two type styles and an accent color. Supported embeds have a working outbound-link fallback.
 
@@ -26,7 +26,7 @@ The publishing source provides stable `/@handle` pages, separate draft/published
 
 ## Development
 
-Use Node 24. Read [`AGENTS.md`](AGENTS.md) and run the workspace's storage preflight before installing dependencies or building. Local installation remains stopped because the preflight failed. The [first dependency lock](docs/results/2026/11-11/first-lock.md) and [frozen install/production build](docs/results/2026/11-11/local-build.md) are accepted in isolated public CI. The 44 frontend fixtures passed in the first build attempt; a corrected observer carried their original records into the successful build without replay. Browser and hosted/backend acceptance remain open.
+Use Node 24. Read [`AGENTS.md`](AGENTS.md) and run the workspace's storage preflight before installing dependencies or building. Local installation remains stopped because the preflight failed. The [first dependency lock](docs/results/2026/11-11/first-lock.md) and [frozen install/production build](docs/results/2026/11-11/local-build.md) are accepted in isolated public CI. The 44 frontend fixtures passed in the first build attempt; a corrected observer carried their original records into the successful build without replay. [Browser-source publication](docs/results/2026/11-11/editor-preparation-publication.json) records the accepted desktop case and pending recovery separately. Full browser and hosted/backend acceptance remain open.
 
 After sufficient storage and the required approvals:
 

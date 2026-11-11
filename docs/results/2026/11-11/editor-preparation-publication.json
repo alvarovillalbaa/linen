@@ -1,0 +1,77 @@
+{
+  "schema": "linen.editor-preparation-publication.v1",
+  "scope": "Accepted desktop authoring evidence and versioned recovery source; three journeys remain pending",
+  "publishedSource": {
+    "commit": "d4b94e9f2d7b8dc8c17d5b69adf91536a0fd00b4",
+    "tree": "36bdcc096257fba2cc988e842f45378dbd6259b4",
+    "files": 97,
+    "bytes": 2019015,
+    "githubMainReadBack": true,
+    "nativeHeadOriginAndSemanticIndexMatched": true,
+    "allNativeBlobsAndModesMatched": true,
+    "nativeCleanBeforeThisMetadataReceipt": true,
+    "applicationAndDependencyInputsUnchangedFromAcceptedBuild": true,
+    "workflowInMain": false
+  },
+  "acceptedCase": {
+    "id": "L01",
+    "checkedSource": "126e28ba8d406ffb538d06f1cd21b3ca570d166c",
+    "runId": 43094693705,
+    "jobId": 130780385106,
+    "passed": true,
+    "originalRunOverallPassed": false,
+    "completeBrowserResponseOriginals": 20,
+    "actualDownloadedBackupOriginals": 1,
+    "pngInspected": true,
+    "pagesContextNetworkAndStaticListenerCleanupPassed": true,
+    "replayed": false,
+    "originalPacket": "editor-attempt1-originals.zip",
+    "allOriginalMembers": 100,
+    "allOriginalMemberBytes": 1221056,
+    "packetQualification": "Data-only repack preserving member bytes; not GitHub ZIP or CI permission identity"
+  },
+  "recovery": {
+    "checkedSource": "d4b94e9f2d7b8dc8c17d5b69adf91536a0fd00b4",
+    "activationCommit": "76bd869d5ccdd5b269dacabd3a09b9cc3b1379f7",
+    "runId": 43095738552,
+    "workflowId": 415126649,
+    "branch": "qa/linen-local-editor-20261111-editor-2",
+    "cases": ["L02", "L03", "L04"],
+    "lastObservedStatus": "queued",
+    "conclusion": null,
+    "assignedJobs": 0,
+    "workflowStateReadBack": "active",
+    "pendingDeploymentsReadBack": [],
+    "statusVerifiedThrough": ["connected GitHub", "normal gh CLI"],
+    "accepted": false,
+    "duplicateInvocationStarted": false
+  },
+  "retiredOriginalControl": {
+    "workflowId": 415118893,
+    "workflowStateReadBack": "disabled_manually",
+    "branch": "qa/linen-local-editor-20261111-editor-1",
+    "expectedHead": "c96320dd7649adc628e4b4a80a81152ae11d0e63",
+    "deleted": true,
+    "deletionReadBackStatus": 404
+  },
+  "localDuplicateCleanup": {
+    "completedAt": "2026-11-11T20:36:07.812768+00:00",
+    "removedFiles": 115,
+    "removedBytes": 2686221,
+    "exactIdentityAndCanonicalBytesVerified": true,
+    "scopedNoOpenersVerified": true,
+    "allRemovedPathsAbsent": true,
+    "canonicalOriginalsRetained": true
+  },
+  "fullFourCaseBrowserQualification": false,
+  "fullProductAccepted": false,
+  "capacityCheckPending": true,
+  "provisioningDeploymentOrProviderConfigurationChanged": false,
+  "localHeavyExecution": false,
+  "proofLimits": [
+    "Only L01 is accepted; original L02/L03/L04 attempts stopped at observer selectors and recovery has no result yet",
+    "Original failed overall verdict and all screenshots/response/download originals remain preserved",
+    "Local production browser evidence does not establish hosted persistent profiles or backend ownership enforcement",
+    "No physical-device, broad accessibility, all-card or whole-product acceptance"
+  ]
+}
