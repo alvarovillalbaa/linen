@@ -23,3 +23,9 @@ The lock phase and frozen local build are now closed; see
 `docs/results/2026/11-11/local-build.md`. Preserve the failed summary observer
 and its 44 actual passing frontend records; do not replay them unchanged.
 Next is concrete local-editor browser acceptance, with publishing still disabled.
+
+The concrete four-case source and temporary CI bounds are in
+`docs/proposals/editor-browser-checks.md`. Use fresh authored contexts and the
+actual local production runtime; no raw storage/app injection, response
+fulfillment, provider binding or capacity retry. Preserve failures and accepted
+case identities before repairing or selecting another invocation.
