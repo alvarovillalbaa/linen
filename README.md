@@ -26,12 +26,12 @@ The publishing source provides stable `/@handle` pages, separate draft/published
 
 ## Development
 
-Use Node 24. Read [`AGENTS.md`](AGENTS.md) and run the workspace's storage preflight before installing dependencies or building. Those steps were not run for this release because the preflight failed. No lockfile has been generated yet; dependency installation and a reproducible accepted build remain release gates.
+Use Node 24. Read [`AGENTS.md`](AGENTS.md) and run the workspace's storage preflight before installing dependencies or building. Local installation remains stopped because the preflight failed. The [first dependency lock](docs/results/2026/11-11/first-lock.md) was generated and reviewed in isolated public CI without installing application packages. Frozen installation and an accepted build remain release gates.
 
 After sufficient storage and the required approvals:
 
 ```sh
-npm install
+npm ci
 npm run dev
 ```
 
