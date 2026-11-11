@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 import { assetIds, blankPage, createCard, LIMITS, moveCard, normalizeHandle, packCards, publicationIssues, safeImageUrl, validatePage } from '../lib/model';
-import { getMedia, listMedia, loadWorkspace, putMedia, replaceWorkspace, saveWorkspace, deleteMedia } from '../lib/local';
+import { getMedia, listMedia, loadWorkspace, putMedia, replaceWorkspace, saveWorkspace, deleteMedia, LocalDraftConflictError } from '../lib/local';
 import { inspectMedia, validateMediaFile } from '../lib/media';
 import { exportBackup, exportSite, importBackup } from '../lib/archive';
 import { download, request, RequestError, syncPage } from '../lib/client';
@@ -41,6 +41,7 @@ function Modal({ title, children, onClose, busy = false }: { title: string; chil
 
 export default function Editor() {
   const [workspace, setWorkspace] = useState<Workspace | null>(null), current = useRef<Workspace | null>(null);
+  const persisted = useRef<Workspace | null | undefined>(undefined);
   const [selected, setSelected] = useState<string | null>(null), [inspectorOpen, setInspectorOpen] = useState(false);
   const [preview, setPreview] = useState(false), [screen, setScreen] = useState<'desktop' | 'mobile'>('desktop');
   const [modal, setModal] = useState<'add' | 'publish' | 'files' | 'recover' | null>(null), [narrow, setNarrow] = useState(false);
@@ -55,6 +56,20 @@ export default function Editor() {
   const uploadTarget = useRef<'avatar' | { card: string } | 'new'>('new');
 
   function store(value: Workspace) { current.current = value; setWorkspace(value); }
+  function localConflict(error: unknown): boolean {
+    if (!(error instanceof LocalDraftConflictError)) return false;
+    setStorageEnabled(false); setLocalStatus('Not saved');
+    setNotice(`${error.message} Keep this tab open and export a backup before retrying.`);
+    return true;
+  }
+  async function persistWorkspace(value: Workspace): Promise<void> {
+    if (persisted.current === undefined) throw new Error('Local storage has not been read. Keep this draft open and retry local saving first.');
+    await saveWorkspace(value, persisted.current); persisted.current = structuredClone(value);
+  }
+  async function replaceLocalWorkspace(value: Workspace, media: MediaFile[]): Promise<void> {
+    if (persisted.current === undefined) throw new Error('Local storage has not been read. Keep this draft open and retry local saving first.');
+    await replaceWorkspace(value, media, persisted.current); persisted.current = structuredClone(value);
+  }
   function applyPage(next: ProfilePage, track = true): boolean {
     const before = current.current; if (!before) return false;
     try {
@@ -77,7 +92,7 @@ export default function Editor() {
   }
   useEffect(() => {
     let cancelled = false;
-    void loadWorkspace().then(saved => { if (!cancelled) { store(saved || { version: 1, page: blankPage(), remote: null, updatedAt: Date.now() }); setLocalStatus('Saved on this device'); } }).catch(error => {
+    void loadWorkspace().then(saved => { if (!cancelled) { persisted.current = saved; store(saved || { version: 1, page: blankPage(), remote: null, updatedAt: Date.now() }); setLocalStatus('Saved on this device'); } }).catch(error => {
       if (!cancelled) { store({ version: 1, page: blankPage(), remote: null, updatedAt: Date.now() }); setStorageEnabled(false); setLocalStatus('This visit only'); setNotice(`${message(error)} Existing saved data has not been replaced.`); }
     });
     void request<{ publishing: boolean }>('/api/config').then(value => { if (!cancelled) setConfigured(value.publishing === true); }).catch(() => {});
@@ -91,8 +106,8 @@ export default function Editor() {
       if (working.current) return;
       const captured = workspace;
       saveQueue.current = saveQueue.current.catch(() => {}).then(async () => {
-        try { await saveWorkspace(captured); if (current.current?.updatedAt === captured.updatedAt) setLocalStatus('Saved on this device'); }
-        catch (error) { if (current.current?.updatedAt === captured.updatedAt) { setLocalStatus('Not saved'); setNotice(`${message(error)} Keep this tab open and export a backup.`); } }
+        try { await persistWorkspace(captured); if (current.current === captured) setLocalStatus('Saved on this device'); }
+        catch (error) { if (!localConflict(error) && current.current === captured) { setLocalStatus('Not saved'); setNotice(`${message(error)} Keep this tab open and export a backup.`); } }
       });
     }, 350);
     return () => clearTimeout(timer);
@@ -117,9 +132,12 @@ export default function Editor() {
     working.current = true; setBusy(label); setNotice('');
     try { await saveQueue.current; await action(); }
     catch (error) {
+      if (localConflict(error)) return;
       if (error instanceof RequestError && error.code === 'handle_taken' && current.current?.remote?.revision === 0) {
         const value = { ...current.current, remote: null, updatedAt: Date.now() };
-        store(value); await saveWorkspace(value).catch(() => { setLocalStatus('Not saved'); });
+        store(value);
+        try { await persistWorkspace(value); }
+        catch (saveError) { if (localConflict(saveError)) return; setLocalStatus('Not saved'); }
       }
       setNotice(`${message(error)}${error instanceof RequestError && error.status === 409 && error.code !== 'handle_taken' ? ' Export a backup before loading another version.' : ''}`);
     }
@@ -193,11 +211,11 @@ export default function Editor() {
         const issues = publicationIssues(captured.page, files.map(file => file.id));
         if (issues.length) throw new Error(issues.slice(0, 4).join(' '));
       }
-      let remote = await syncPage(captured, setBusy, bindingChanged);
+      let remote = await syncPage(captured, setBusy, bindingChanged, persistWorkspace);
       if (publish) {
         const result = await request<OwnerSnapshot>(`/api/profiles/${remote.handle}/publish`, 'POST', { revision: remote.revision }, remote.ownerKey);
         remote = { ...remote, revision: result.revision, publishedRevision: result.publishedRevision }; bindingChanged(remote);
-        await saveWorkspace(current.current!); setNotice('Your page is published. Download your recovery key and keep it private.');
+        await persistWorkspace(current.current!); setNotice('Your page is published. Download your recovery key and keep it private.');
       } else setNotice('Cloud draft saved. Your public version is unchanged.');
     });
   }
@@ -214,7 +232,7 @@ export default function Editor() {
         media.push(await validateMediaFile({ id, name: asset.name, type: asset.type, size: asset.size, blob: await response.blob(), createdAt: Date.now() }));
       }
       const value: Workspace = { version: 1, page, remote: { handle, ownerKey: key, revision: remote.revision, publishedRevision: remote.publishedRevision }, updatedAt: Date.now() };
-      await replaceWorkspace(value, media); store(value); setHistory([]); setFuture([]); setSelected(null); setRecoverKey(''); setModal(null); setStorageEnabled(true); setMediaTick(value => value + 1); setNotice('Your page and files are available on this device.');
+      await replaceLocalWorkspace(value, media); store(value); setHistory([]); setFuture([]); setSelected(null); setRecoverKey(''); setModal(null); setStorageEnabled(true); setMediaTick(value => value + 1); setNotice('Your page and files are available on this device.');
     });
   }
   async function importProject(file: File) {
@@ -223,7 +241,7 @@ export default function Editor() {
       if (!window.confirm('Replace the local draft with this backup? Public pages stay unchanged. Keep your recovery key separately.')) return;
       const before = current.current, keep = before?.page.id === restored.page.id && before.remote?.handle === restored.page.handle ? before.remote : null;
       const value: Workspace = { version: 1, page: restored.page, remote: keep, updatedAt: Date.now() };
-      await replaceWorkspace(value, restored.media); store(value); setHistory([]); setFuture([]); setSelected(null); setModal(null); setStorageEnabled(true); setMediaTick(value => value + 1); setNotice('Backup restored locally. Nothing was published.');
+      await replaceLocalWorkspace(value, restored.media); store(value); setHistory([]); setFuture([]); setSelected(null); setModal(null); setStorageEnabled(true); setMediaTick(value => value + 1); setNotice('Backup restored locally. Nothing was published.');
     });
   }
   function recoveryFile() {
@@ -240,7 +258,7 @@ export default function Editor() {
       else if (action === 'revoke') { await request(`${base}/preview`, 'DELETE', {}, remote.ownerKey); setPreviewUrl(''); setNotice('Previous private preview links are revoked.'); }
       else if (action === 'unpublish') { const result = await request<OwnerSnapshot>(`${base}/publish`, 'DELETE', {}, remote.ownerKey); bindingChanged({ ...remote, revision: result.revision, publishedRevision: result.publishedRevision }); setNotice('Public page unpublished. Your draft and recovery key remain available.'); }
       else { await request(base, 'DELETE', { confirm: true }, remote.ownerKey); store({ ...current.current!, page: { ...current.current!.page, id: crypto.randomUUID(), handle: '' }, remote: null, updatedAt: Date.now() }); setPreviewUrl(''); setHistory([]); setFuture([]); setNotice('Cloud page deleted. Your local content remains; choose a new handle to publish again.'); }
-      await saveWorkspace(current.current!);
+      await persistWorkspace(current.current!);
     });
   }
   async function cleanupMedia() {
@@ -286,7 +304,7 @@ export default function Editor() {
         </div><p className="canvas-hint">{preview ? 'This is a local preview. Publish to make a public page.' : 'Click to edit. Drag the dots to rearrange. Make it yours.'}</p>
       </main>{!narrow && inspector}</div>
     {notice && !modal && !(narrow && inspectorOpen) && <div className="editor-notice" role="status"><span>{notice}</span><button type="button" aria-label="Dismiss notice" onClick={() => setNotice('')}>×</button></div>}
-    {!storageEnabled && <div className="storage-banner">This draft is in memory only. <button type="button" onClick={() => void run('Retrying local save…', async () => { if (!window.confirm('Save this in-memory draft over the current Linen local draft? Export first if you need both.')) return; await saveWorkspace(current.current!); setStorageEnabled(true); setNotice('Local saving is available again.'); })}>Retry saving</button></div>}
+    {!storageEnabled && <div className="storage-banner">This draft is in memory only. <button type="button" onClick={() => void run('Retrying local save…', async () => { const expected = await loadWorkspace(); if (!window.confirm('Save this in-memory draft over the current Linen local draft? Export first if you need both.')) return; const value = current.current!; await saveWorkspace(value, expected); persisted.current = structuredClone(value); setStorageEnabled(true); setLocalStatus('Saved on this device'); setNotice('Local saving is available again.'); })}>Retry saving</button></div>}
     <input ref={fileInput} type="file" hidden aria-label="Add a profile file" onChange={event => { const file = event.target.files?.[0]; event.target.value = ''; if (file) void acceptMedia(file); }}/>
     <input ref={backupInput} type="file" hidden accept=".zip" aria-label="Import a Linen backup" onChange={event => { const file = event.target.files?.[0]; event.target.value = ''; if (file) void importProject(file); }}/>
     <input ref={recoveryInput} type="file" hidden accept="application/json,.json" aria-label="Read a recovery key file" onChange={event => { const file = event.target.files?.[0]; event.target.value = ''; if (!file) return; if (file.size > 4096) { setNotice('This recovery file is too large.'); return; } void file.text().then(text => { const value = JSON.parse(text); if (!value || value.format !== 'linen-owner-key' || value.version !== 1 || typeof value.handle !== 'string' || typeof value.ownerKey !== 'string') throw new Error('Choose a Linen recovery key file.'); setRecoverHandle(value.handle); setRecoverKey(value.ownerKey); }).catch(error => setNotice(message(error))); }}/>

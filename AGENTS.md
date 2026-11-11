@@ -29,3 +29,14 @@ The concrete four-case source and temporary CI bounds are in
 actual local production runtime; no raw storage/app injection, response
 fulfillment, provider binding or capacity retry. Preserve failures and accepted
 case identities before repairing or selecting another invocation.
+
+## Local draft preservation candidate
+
+`docs/proposals/local-draft-cas.md` owns a separate source-level stale-save
+repair using the existing Workspace shape and database version. It is a
+candidate pending semantic build and actual two-tab validation; do not carry
+old browser passes as acceptance of changed persistence code. Keep the existing
+recovery run43095738552 and its frozen source intact. Do not enqueue a duplicate
+or another verification job while that run remains live. Source work is covered
+by the all-project implementation authorization; no cloud/provider or migration
+gate is opened. Native main remains the previously published qualified source.

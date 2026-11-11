@@ -1,6 +1,6 @@
 import type { OwnerSnapshot, ProfilePage, RemoteBinding, Workspace } from './types';
 import { assetIds, validatePage } from './model';
-import { getMedia, saveWorkspace } from './local';
+import { getMedia } from './local';
 
 export class RequestError extends Error {
   constructor(message: string, public status: number, public code: string) { super(message); }
@@ -19,12 +19,12 @@ export async function request<T>(path: string, method = 'GET', data?: unknown, o
 export function newOwnerKey(): string {
   return btoa(String.fromCharCode(...crypto.getRandomValues(new Uint8Array(32)))).replaceAll('+', '-').replaceAll('/', '_').replace(/=+$/, '');
 }
-export async function syncPage(workspace: Workspace, progress: (text: string) => void, bindingChanged: (remote: RemoteBinding) => void): Promise<RemoteBinding> {
+export async function syncPage(workspace: Workspace, progress: (text: string) => void, bindingChanged: (remote: RemoteBinding) => void, persist: (value: Workspace) => Promise<void>): Promise<RemoteBinding> {
   const page: ProfilePage = validatePage(workspace.page);
   let remote: RemoteBinding = workspace.remote || { handle: page.handle, ownerKey: newOwnerKey(), revision: 0, publishedRevision: null };
   if (!workspace.remote) {
     // Retain the idempotent claim's private key before making a network request.
-    await saveWorkspace({ ...workspace, remote, updatedAt: Date.now() }); bindingChanged(remote);
+    await persist({ ...workspace, remote, updatedAt: Date.now() }); bindingChanged(remote);
   }
   if (remote.revision === 0) {
     progress('Claiming your address…');
@@ -32,7 +32,7 @@ export async function syncPage(workspace: Workspace, progress: (text: string) =>
     if (created.page.id !== page.id || created.page.handle !== remote.handle) throw new Error('The saved page identity differs from this draft. Recover the existing page before continuing.');
     if (created.revision > 1 && JSON.stringify(validatePage(created.page)) !== JSON.stringify(page)) throw new RequestError('The cloud page has newer edits. Export this draft and recover the cloud version before saving.', 409, 'conflict');
     remote = { ...remote, revision: created.revision, publishedRevision: created.publishedRevision }; bindingChanged(remote);
-    await saveWorkspace({ ...workspace, remote, updatedAt: Date.now() });
+    await persist({ ...workspace, remote, updatedAt: Date.now() });
   }
   const base = `/api/profiles/${encodeURIComponent(remote.handle)}`;
   for (const id of assetIds(page)) {
@@ -55,7 +55,7 @@ export async function syncPage(workspace: Workspace, progress: (text: string) =>
   progress('Saving your draft…');
   const saved = await request<OwnerSnapshot>(base, 'PUT', { page, revision: remote.revision }, remote.ownerKey);
   remote = { ...remote, revision: saved.revision, publishedRevision: saved.publishedRevision }; bindingChanged(remote);
-  await saveWorkspace({ ...workspace, remote, updatedAt: Date.now() });
+  await persist({ ...workspace, remote, updatedAt: Date.now() });
   return remote;
 }
 export function download(blob: Blob, name: string): void {

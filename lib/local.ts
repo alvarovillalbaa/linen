@@ -20,7 +20,7 @@ function validateWorkspace(value: Workspace): Workspace {
       || !/^[a-z0-9][a-z0-9-]{1,28}[a-z0-9]$/.test(binding.handle) || !OWNER_KEY.test(binding.ownerKey)
       || !Number.isSafeInteger(binding.revision) || binding.revision < 0
       || (binding.publishedRevision !== null && (!Number.isSafeInteger(binding.publishedRevision) || binding.publishedRevision < 0 || binding.publishedRevision > binding.revision))) throw new Error('Invalid private publishing binding.');
-    remote = { ...binding };
+    remote = { handle: binding.handle, ownerKey: binding.ownerKey, revision: binding.revision, publishedRevision: binding.publishedRevision };
   }
   return { version: 1, page, remote, updatedAt: value.updatedAt };
 }
@@ -65,9 +65,35 @@ export async function loadWorkspace(): Promise<Workspace | null> {
   return value === undefined ? null : validateWorkspace(value);
 }
 
-export async function saveWorkspace(workspace: Workspace): Promise<void> {
+export class LocalDraftConflictError extends Error {
+  constructor() {
+    super('Another Linen tab changed the saved draft. Your edits in this tab have not replaced it.');
+    this.name = 'LocalDraftConflictError';
+  }
+}
+
+function expectedSnapshot(expected: Workspace | null | undefined): Workspace | null | undefined {
+  return expected === null || expected === undefined ? expected : validateWorkspace(expected);
+}
+
+function whenWorkspaceMatches(tx: IDBTransaction, expected: Workspace | null | undefined, commit: () => void, fail: (error: unknown) => void) {
+  const request = tx.objectStore('workspace').get('current');
+  request.onsuccess = () => {
+    try {
+      if (expected === undefined) throw new Error('Read the saved local draft before saving or replacing it.');
+      const actual = request.result === undefined ? null : validateWorkspace(request.result);
+      if (JSON.stringify(actual) !== JSON.stringify(expected)) throw new LocalDraftConflictError();
+      commit();
+    } catch (error) { fail(error); }
+  };
+}
+
+export async function saveWorkspace(workspace: Workspace, expected: Workspace | null): Promise<void> {
   const value = validateWorkspace(workspace);
-  await transaction<void>(['workspace'], 'readwrite', tx => { tx.objectStore('workspace').put(value, 'current'); });
+  const baseline = expectedSnapshot(expected);
+  await transaction<void>(['workspace'], 'readwrite', (tx, _result, fail) => {
+    whenWorkspaceMatches(tx, baseline, () => tx.objectStore('workspace').put(value, 'current'), fail);
+  });
 }
 
 export async function putMedia(file: File): Promise<MediaFile> {
@@ -113,12 +139,16 @@ export async function deleteMedia(id: string): Promise<void> {
   await transaction<void>(['media'], 'readwrite', tx => { tx.objectStore('media').delete(id); });
 }
 
-export async function removeWorkspace(): Promise<void> {
-  await transaction<void>(STORES, 'readwrite', tx => { for (const name of STORES) tx.objectStore(name).clear(); });
+export async function removeWorkspace(expected: Workspace | null): Promise<void> {
+  const baseline = expectedSnapshot(expected);
+  await transaction<void>(STORES, 'readwrite', (tx, _result, fail) => {
+    whenWorkspaceMatches(tx, baseline, () => { for (const name of STORES) tx.objectStore(name).clear(); }, fail);
+  });
 }
 
-export async function replaceWorkspace(workspace: Workspace, media: MediaFile[]): Promise<void> {
+export async function replaceWorkspace(workspace: Workspace, media: MediaFile[], expected: Workspace | null): Promise<void> {
   const value = validateWorkspace(workspace), checked: MediaFile[] = [], ids = new Set<string>();
+  const baseline = expectedSnapshot(expected);
   let total = 0;
   if (!Array.isArray(media) || media.length > LIMITS.cards + 1) throw new Error('Invalid imported media collection.');
   for (const item of media) {
@@ -128,9 +158,11 @@ export async function replaceWorkspace(workspace: Workspace, media: MediaFile[])
   }
   const references = assetIds(value.page);
   if (total > LIMITS.mediaBytes || references.length !== ids.size || references.some(id => !ids.has(id))) throw new Error('The imported media does not match this page.');
-  await transaction<void>(STORES, 'readwrite', tx => {
-    for (const name of STORES) tx.objectStore(name).clear();
-    tx.objectStore('workspace').put(value, 'current');
-    for (const file of checked) tx.objectStore('media').add(file);
+  await transaction<void>(STORES, 'readwrite', (tx, _result, fail) => {
+    whenWorkspaceMatches(tx, baseline, () => {
+      for (const name of STORES) tx.objectStore(name).clear();
+      tx.objectStore('workspace').put(value, 'current');
+      for (const file of checked) tx.objectStore('media').add(file);
+    }, fail);
   });
 }
