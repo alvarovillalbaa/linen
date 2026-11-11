@@ -8,3 +8,13 @@ This directory contains Linen's application and backend source. Read `docs/spec.
 - This research does not authorize a paid plan, trial, metered upgrade or automatic overage. A nominal $0 base price does not establish a free plan.
 - Source and static/frontend checks do not establish a deployed app, browser acceptance, IndexedDB durability or backend ownership enforcement. Keep publishing disabled by default. Backend acceptance and browser checks require specific Linen approval; other apps' approvals do not apply.
 - Preserve unrelated work and use `apply_patch`. The active user goal authorizes implementation and a dedicated personal GitHub repository; source work independent of the capacity check can continue. Keep provisioning dependent on the pending check, follow the user's verification/approval rules, and run Storage Guard before installations or local app builds. Do not work around a failed preflight.
+
+## Approved local-editor qualification — 11 November 2026
+
+The owner's subsequent "I approve everything" and "Keep going. Do all the work"
+authorize this Linen-specific, free temporary-CI qualification described in
+`docs/proposals/local-editor-checks.md`. The older no-approval statements retain
+their historical source boundary. The capacity check remains pending: no
+deployment, account, provider setup, public publishing or backend acceptance.
+Start with the isolated lock-generation phase; review its actual output before
+freezing a separate install/build/editor source. No local heavy execution.
