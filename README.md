@@ -1,5 +1,9 @@
 # Linen
 
+<!-- project-family:start -->
+> **Project family:** [Web & Creative Apps](https://github.com/alvarovillalbaa#web-and-creative-apps) · **Area:** Publishing
+<!-- project-family:end -->
+
 A little space for everything you do. An open-source profile builder for links, projects, notes, photos, video, music and places.
 
 **Source release; hosting is pending.** One [desktop editor journey](docs/results/2026/11-11/editor-attempt1.md) passed against the real local production build. Three unfinished journeys have a [queued recovery run](https://github.com/alvarovillalbaa/linen/actions/runs/43095738552); the first overall-failed attempt and its originals remain preserved. This is partial browser qualification. The owner left the free-capacity check pending. No provider account, service, environment setting or paid plan has been created. Persistent public publishing remains required before this project can be called complete.
